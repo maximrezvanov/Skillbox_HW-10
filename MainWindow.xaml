@@ -7,6 +7,48 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <ListBox x:Name="longList"
+                 Grid.Column="0"
+                 HorizontalAlignment="Stretch"
+                 Margin="5"
+                 VerticalAlignment="Stretch"
+                 >
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Border BorderBrush="Black" Margin="5" BorderThickness="1" CornerRadius="10">
+                        <StackPanel Margin="10">
+                            <TextBlock Text="{Binding FirstName}" Margin="0" FontSize="15"/>
+                            <TextBlock Text="{Binding Msg}" Margin="0" FontSize="20"/>
+                            <TextBlock Text="{Binding Time}" Margin="10" FontSize="10" 
+                                           Foreground="Gray" TextAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
 
+        <GroupBox Grid.Column="1"
+                  FontSize="20"
+                  Header="Send message"
+                  HorizontalAlignment="Stretch"
+                  Margin="5"
+                  VerticalAlignment="Stretch"
+                  >
+            <StackPanel>
+                <TextBlock x:Name="TargetSend" Text="{Binding ElementName=longList, 
+                    Path=SelectedItem.Id}"
+                           Visibility="Collapsed"
+                        FontSize="20" Margin="5"/>
+                <TextBox x:Name="txtMsgText" FontSize="20" Margin="5"/>
+                <Button x:Name="btnMsgSend" Margin="50,5" FontSize="20" 
+                        Content="Send" Click="btnMsgSendClick"/>
+                <Button x:Name="btnHistorySave" Margin="50,5" FontSize="20" 
+                        Content="Save" Click="btnHistorySaveClick"/>
+            </StackPanel>
+        </GroupBox>
     </Grid>
 </Window>

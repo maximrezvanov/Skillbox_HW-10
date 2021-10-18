@@ -1,5 +1,5 @@
 ﻿HW-10
-1.0.0.0
+
 
 winexe
 C#
@@ -12,9 +12,9 @@ TRACE;DEBUG;NET;NET6_0;NETCOREAPP
 C:\Users\gagarin\Desktop\C#\HW-10\HW-10\App.xaml
 11407045341
 
-7-1257957287
+5-1843254626
 1961014175910
 MainWindow.xaml;
 
-True
+False
 

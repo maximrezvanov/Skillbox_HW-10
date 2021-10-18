@@ -7,13 +7,14 @@ using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.InputFiles;
 using Telegram.Bot.Types.ReplyMarkups;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
+using Newtonsoft.Json;
+using Microsoft.Win32;
 
 namespace HW_10
 {
     class TelegramMessageClient
     {
-        private MainWindow window;
+        private static MainWindow window;
         public ObservableCollection<MessageLog> BotMessageLog { get; set; }
         private static TelegramBotClient botClient;
         private static string token = "2045254140:AAG5R_d9MnWQxF3xwF0ZSDfUvLUA_0f7YDk";
@@ -25,7 +26,7 @@ namespace HW_10
         private static List<KeyboardButton[]> rows = new List<KeyboardButton[]>();
         private static List<KeyboardButton> cols = new List<KeyboardButton>();
 
-        static void Main(string[] args)
+      /* static void Main(string[] args)
         {
             #region testProxy
 
@@ -50,8 +51,9 @@ namespace HW_10
             GetBotStatus();
             Console.ReadLine();
         }
+      */
 
-        private static async void MessageListener(object sender, Telegram.Bot.Args.MessageEventArgs e)
+        private async void MessageListener(object sender, Telegram.Bot.Args.MessageEventArgs e)
         {
             Console.WriteLine($"{DateTime.Now.ToLongTimeString()}: user: {e.Message.Chat.FirstName}, " +
                               $"chat: {e.Message.Chat.Id}, message: {e.Message.Text}, type {e.Message.Type.ToString()}");
@@ -140,6 +142,12 @@ namespace HW_10
                     );
                 }
             }
+
+            window.Dispatcher.Invoke(() =>
+            {
+                BotMessageLog.Add(new MessageLog(DateTime.Now.ToLongTimeString(),
+                    e.Message.Chat.FirstName, e.Message.Chat.Id, e.Message.Text));
+            });
         }
 
         private static async void Download(string fileId, string filePath)
@@ -168,12 +176,6 @@ namespace HW_10
             }
         }
 
-        private static void GetBotStatus()
-        {
-            var botStatus = botClient.GetMeAsync().Result;
-            Console.WriteLine($"Bot info: id={botStatus.Id}, name '{botStatus.FirstName}'\n");
-        }
-
         private static void CreateDir()
         {
             DirectoryInfo dirInfo = new DirectoryInfo(fPath);
@@ -186,8 +188,10 @@ namespace HW_10
         public TelegramMessageClient(MainWindow w, 
             string token = "2045254140:AAG5R_d9MnWQxF3xwF0ZSDfUvLUA_0f7YDk")
         {
-            this.BotMessageLog = new ObservableCollection<MessageLog>();
-            this.window = w;
+            CreateDir();
+
+            BotMessageLog = new ObservableCollection<MessageLog>();
+            window = w;
             botClient = new TelegramBotClient(token);
             botClient.OnMessage += MessageListener;
             botClient.StartReceiving();
@@ -195,8 +199,27 @@ namespace HW_10
 
         public void SendMessage(string text, string Id)
         {
-            int id = Convert.ToInt32(Id);
+            long id = Convert.ToInt64(Id);
             botClient.SendTextMessageAsync(id, text);
+            Console.WriteLine($"Count :{BotMessageLog.Count}");
+        }
+
+        public void SaveMessages()
+        {
+            string json = JsonConvert.SerializeObject(BotMessageLog);
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.FileName = "data";                 
+            sfd.DefaultExt = ".json"; 
+
+            if (sfd.ShowDialog() == true)
+            {
+                string filename = sfd.FileName;
+
+                using (StreamWriter sw = new StreamWriter(filename))
+                {
+                    sw.WriteLine(json);
+                }
+            }
         }
 
     }

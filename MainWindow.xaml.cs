@@ -20,9 +20,25 @@ namespace HW_10
     /// </summary>
     public partial class MainWindow : Window
     {
+        TelegramMessageClient client;
         public MainWindow()
         {
             InitializeComponent();
+            client = new TelegramMessageClient(this);
+            longList.ItemsSource = client.BotMessageLog;
+        }
+
+        private void btnMsgSendClick(object sender, RoutedEventArgs e)
+        {
+            if (!String.IsNullOrWhiteSpace(txtMsgText.Text) && 
+                !String.IsNullOrWhiteSpace(TargetSend.Text))
+                client.SendMessage(txtMsgText.Text, TargetSend.Text);
+        }
+
+        private void btnHistorySaveClick(object sender, RoutedEventArgs e)
+        {
+            client.SaveMessages();
+
         }
     }
 }

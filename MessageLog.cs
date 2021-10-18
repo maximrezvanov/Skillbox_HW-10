@@ -8,16 +8,16 @@ namespace HW_10
 {
     struct MessageLog
     {
-        public string Time { get; set; }
-        public string Message { get; set; }
-        public int Id { get; set; }
+        public string time { get; set; }
+        public string message { get; set; }
+        public long id { get; set; }
         public string FirstName { get; set; }
 
-        public MessageLog(string Time, string message, int id, string firstName)
+        public MessageLog(string time, string message, long id, string firstName)
         {
-            this.Time = Time;
-            this.Message = message; 
-            this.Id = id;   
+            this.time = time;
+            this.message = message; 
+            this.id = id;   
             this.FirstName = firstName;
         }
     }
